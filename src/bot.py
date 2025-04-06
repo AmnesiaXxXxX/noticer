@@ -191,9 +191,10 @@ class Bot(Client):
                     message (Message): Объект сообщения, содержащий данные о запросе пользователя.
         """
         text = "Команды бота: \n\n\n"
+        text = "Команды бота: \n\n\n"
         for name, func in self.async_methods.items():
             if func.__doc__:
-                doc = func.__doc__.splitlines()[0].strip()
+                doc = func.__doc__.splitlines()[1].strip()
             else:
                 doc = "Без описания"
             text += f"{name}: {doc}\n\n"
