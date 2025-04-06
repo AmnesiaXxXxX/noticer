@@ -213,7 +213,7 @@ class Bot(Client):
                     for func_name, func in self.async_methods.items():
                         if arg in func_name.split("_")[1:]:
                             doc = func.__doc__ or "Без описания"
-                            text = f"Команда {arg}: {doc}"
+                            text = f"```{arg}\n{doc}```"
                             break
                 else:
                     text = "Такой команды нет("
