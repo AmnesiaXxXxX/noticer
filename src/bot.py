@@ -110,7 +110,12 @@ class Bot(Client):
         self.run()
 
     async def handle_help_start(self, _, message: Message):
-        await message.reply("HEEELp")
+
+        q = await message.from_user.ask("Ты здесь?")
+        if q.text.lower() == "да":
+            await message.reply("HEEELp")
+        else:
+            await message.reply(q.text.translate("en"))
 
     async def handle_remind(self, _, message: Message):
         time_arguments = [message.command[1].strip()]
