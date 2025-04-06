@@ -7,7 +7,8 @@ class GitUpdater:
     def __init__(self) -> None:
         self.date_format: str = "%d/%m/%Y %H:%M:%S"
         self.logger = logging.getLogger("gitupdater")
-        self.get_last_git_update()
+        self.logger.level = logging.INFO
+        self.logger.info(f"Last Git Update: {self.get_last_git_update()}")
 
     def get_last_git_update(self) -> datetime | None:
         try:
@@ -25,7 +26,7 @@ class GitUpdater:
                 check=True,
             )
             last_update = result.stdout.strip()
-            return datetime.strptime(last_update, self.date_format)
+            return datetime.strptime(last_update, f"'{self.date_format}'")
         except subprocess.CalledProcessError as e:
             self.logger.warning(f"Error while checking last Git update: {e}")
             return None
@@ -33,10 +34,8 @@ class GitUpdater:
     @property
     def is_latest_version(self) -> bool:
         try:
-            # Fetch the latest changes from the remote repository
             subprocess.run(["git", "fetch"], check=True)
 
-            # Compare the local HEAD with the remote HEAD
             local_head = subprocess.run(
                 ["git", "rev-parse", "HEAD"],
                 capture_output=True,
