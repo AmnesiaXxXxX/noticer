@@ -20,6 +20,7 @@ def run_check(obj: Reminder):
 
 
 class Bot(Client):
+    """Класс бота"""
     def __init__(
         self, name: str, api_id: Union[int, str], api_hash: str, bot_token: str
     ):
