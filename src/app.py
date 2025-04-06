@@ -18,7 +18,10 @@ updater = GitUpdater()
 def run():
     """Функция для запуска через poetry run app:run"""
     if not updater.is_latest_version:
-        updater.update()
-    else:
-        bot = Bot("reminder_bot", API_ID, API_HASH, BOT_TOKEN)
-        bot.launch_bot()
+        if input("Обнаружена новая версия, обновить? (y/n): ") == "y":
+            updater.update()
+        else:
+            pass
+
+    bot = Bot("reminder_bot", API_ID, API_HASH, BOT_TOKEN)
+    bot.launch_bot()
