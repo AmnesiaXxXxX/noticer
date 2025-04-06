@@ -11,8 +11,8 @@ API_ID = os.getenv("API_ID", "")
 API_HASH = os.getenv("API_HASH", "")
 
 if __name__ == "__main__":
+    bot = Bot("reminder_bot", API_ID, API_HASH, BOT_TOKEN)
     try:
-        bot = Bot("reminder_bot", API_ID, API_HASH, BOT_TOKEN)
         bot.launch_bot()
     except KeyboardInterrupt:
         bot.cycle_run = False
