@@ -204,15 +204,17 @@ class Bot(Client):
 
         else:
             for arg in args:
-                if arg in [
-                    name
-                    for name, _ in [
-                        func_name.split("_")[1:]
-                        for func_name, _ in self.async_methods.items()
-                    ]
-                ]:
-                    doc = self.async_methods.get(arg, "Без описания").__doc__
-                    text = f"Команда {arg}: {doc}"
+                valid_commands = [
+                    token
+                    for func_name in self.async_methods
+                    for token in func_name.split("_")[1:]
+                ]
+                if arg in valid_commands:
+                    for func_name, func in self.async_methods.items():
+                        if arg in func_name.split("_")[1:]:
+                            doc = func.__doc__ or "Без описания"
+                            text = f"Команда {arg}: {doc}"
+                            break
                 else:
                     text = "Такой команды нет("
 
