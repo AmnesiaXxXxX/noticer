@@ -188,14 +188,14 @@ class Bot(Client):
         args = message.command[1:]
         text = "502"
         if not args:
-            text = "Команды бота: \n\n\n"
+            text = "Команды бота:\n\n"
             for name, func in self.async_methods.items():
                 attrs = name.split("_")[1:]
                 if func.__doc__:
                     doc = func.__doc__.splitlines()[1].strip()
                 else:
                     doc = "Без описания"
-                text += f"{', '.join(f'/{name}' for name in attrs)}: **{doc}**\n\n"
+                text += f"  - {', '.join(f'/{attr}' for attr in attrs)}:\n      {doc}\n\n"
 
         else:
             for arg in args:
