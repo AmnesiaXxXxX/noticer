@@ -43,7 +43,6 @@ class GitUpdater:
     def is_latest_version(self) -> bool:
         try:
             subprocess.run(["git", "fetch"], check=True)
-
             local_head = subprocess.run(
                 ["git", "rev-parse", "HEAD"],
                 capture_output=True,
@@ -86,10 +85,11 @@ class GitUpdater:
         try:
             self.logger.info("Restarting application...")
             subprocess.run(["poetry", "run", "run"], check=True)
-            exit()
+            
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error while restarting the application: {e}")
-
+        finally:
+            exit()
     def __enter__(self):
         self.logger.info("Entering context manager.")
         if not self.loop:
@@ -107,7 +107,7 @@ class GitUpdater:
     ) -> None:
         self.logger.info("Exiting context manager.")
         self.is_generator_enabled = False
-        if self.loop and self.loop.is_running():  # type: ignore[union-attr]
+        if self.loop and self.loop.is_running():
             self.loop.call_soon_threadsafe(self.loop.stop)
 
 
