@@ -197,7 +197,7 @@ class Bot(Client):
                 doc = func.__doc__.splitlines()[1].strip()
             else:
                 doc = "Без описания"
-            text += f"__{name}__: **{doc}**\n\n"
+            text += f"`/{name}`: **{doc}**\n\n"
         await message.reply(text)
 
     async def handle_remind(self, _, message: Message):
