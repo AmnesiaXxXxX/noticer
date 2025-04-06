@@ -190,15 +190,27 @@ class Bot(Client):
                 Args:
                     message (Message): Объект сообщения, содержащий данные о запросе пользователя.
         """
-        text = "Команды бота: \n\n\n"
-        text = "Команды бота: \n\n\n"
-        for name, func in self.async_methods.items():
-            if func.__doc__:
-                doc = func.__doc__.splitlines()[1].strip()
-            else:
-                doc = "Без описания"
-            text += f"`/{name}`: **{doc}**\n\n"
-        await message.reply(text)
+        args = message.command[1:]
+        text = "502"
+        if args:
+            text = "Команды бота: \n\n\n"
+            for name, func in self.async_methods.items():
+                if func.__doc__:
+                    doc = func.__doc__.splitlines()[1].strip()
+                else:
+                    doc = "Без описания"
+                text += f"`/{name}`: **{doc}**\n\n"
+                
+        else:
+            for arg in args:
+                if arg in [name for name, _ in self.async_methods.items()]:
+                    doc = self.async_methods.get(arg, "Без описания").__doc__
+                    text = f"Команда {arg}: {doc}"
+                else:
+                    text = "Такой команды нет("        
+                
+        await message.reply(text)          
+        
 
     async def handle_remind(self, _, message: Message):
         """
