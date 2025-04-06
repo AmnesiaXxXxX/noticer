@@ -219,10 +219,10 @@ class Bot(Client):
         """
         Обрабатывает команду установки напоминания.
 
-        # Args:
-            `/remind <time> <text>`
+        Args:
+            `/remind time text`
 
-        # Пример:
+        Пример:
             `/remind 10m Запомнить что нибудь`
         """
         time_arguments = [message.command[1].strip()]
