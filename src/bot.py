@@ -190,9 +190,13 @@ class Bot(Client):
                 Args:
                     message (Message): Объект сообщения, содержащий данные о запросе пользователя.
         """
-        text = "Команды бота \n\n\n"
+        text = "Команды бота: \n\n\n"
         for name, func in self.async_methods.items():
-            text += f"{name}: {func.__doc__}\n\n"
+            if func.__doc__:
+                doc = func.__doc__.splitlines()[0].strip()
+            else:
+                doc = "Без описания"
+            text += f"{name}: {doc}\n\n"
         await message.reply(text)
 
     async def handle_remind(self, _, message: Message):
