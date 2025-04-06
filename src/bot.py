@@ -40,7 +40,7 @@ class Bot(Client):
         self.cycles: int = 0
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
-        
+
         self.load_handlers()
 
     @staticmethod
@@ -165,13 +165,10 @@ class Bot(Client):
             _ : Неиспользуемый параметр.
             message (Message): Объект сообщения, содержащий данные пользователя и команды.
         """
-        q = await message.ask(
-            "Ты здесь?",
-        )
-        if q.text.lower() == "да":
-            await message.reply("HEEELp")
-        else:
-            await message.reply(q.text.translate("en"))
+        text = "Команды бота \n\n\n"
+        for name, func in self.async_methods.items():
+            text += f"{name}: {func.__doc__}\n\n"
+        await message.reply(text)
 
     async def handle_remind(self, _, message: Message):
         """
