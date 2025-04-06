@@ -18,7 +18,7 @@ updater = GitUpdater()
 def run():
     """Функция для запуска через poetry run app:run"""
     if not updater.is_latest_version:
-        if input("Обнаружена новая версия, обновить? (y/n): ") == "y":
+        if input(f"Обнаружена новая версия ({updater.get_last_git_update()}), обновить? (y/n): ") == "y":
             updater.update()
         else:
             pass
