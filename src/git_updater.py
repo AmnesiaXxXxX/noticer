@@ -78,18 +78,19 @@ class GitUpdater:
             if not self.is_latest_version:
                 self.update()
                 self.restart_application()
-            self.logger.info(self.get_last_git_update())
+            self.logger.info(f"{self.get_last_git_update(), self.is_latest_version}")
             await asyncio.sleep(20)
 
     def restart_application(self):
         try:
             self.logger.info("Restarting application...")
             subprocess.run(["poetry", "run", "run"], check=True)
-            
+
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error while restarting the application: {e}")
         finally:
             exit()
+
     def __enter__(self):
         self.logger.info("Entering context manager.")
         if not self.loop:
