@@ -13,6 +13,7 @@ from pyrogram.handlers.message_handler import MessageHandler
 from pyrogram.types import Message
 
 from src.reminder import Reminder
+import logging
 
 
 class Bot(Client):
@@ -40,9 +41,12 @@ class Bot(Client):
         self.cycles: int = 0
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
-
+        self.logger = logging.getLogger("pyrogram")
         self.load_handlers()
 
+    def start(self):
+        self.logger.info(f"Starting {self.__qualname__}")
+        return super().start()
     @staticmethod
     def run_check(obj: Reminder):
         """Функция для проверки напоминателя"""
@@ -157,6 +161,13 @@ class Bot(Client):
     async def handle_help_start(self, _, message: Message):
         """
         Обрабатывает запрос помощи, формируя список доступных команд бота и их описаний.
+<<<<<<< HEAD
+=======
+
+        Проходит по словарю self.async_methods, где каждый элемент представляет команду и
+        ее описание (из docstring соответствующего метода). После формирования текста с
+        перечнем команд, отправляет его в ответ на запрос пользователя.
+>>>>>>> f587115 (refactor: Удалить неиспользуемый код и обновить обработчик команды помощи)
 
         Проходит по словарю self.async_methods, где каждый элемент представляет команду и
         ее описание (из docstring соответствующего метода). После формирования текста с
