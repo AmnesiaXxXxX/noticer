@@ -44,7 +44,7 @@ class Bot(Client):
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
         self.logger = logging.getLogger("pyrogram")
-
+        self.logger.level = logging.INFO
         self.load_handlers()
 
     def start(self):
