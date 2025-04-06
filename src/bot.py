@@ -40,6 +40,7 @@ class Bot(Client):
         """
         self.reminders: list[Reminder] = []
         self.cycle_run: bool = True
+        self.cycle_wait: int = 2
         self.cycles: int = 0
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
@@ -51,7 +52,19 @@ class Bot(Client):
         self.logger.info(
             f"Starting Bot at {datetime.now(UTC).strftime("%d/%m/%Y, %H:%M")}"
         )
+
         return super().start()
+
+    def stop(self, block: bool = True):
+        """
+        Останавливает бота, передавая параметр block для корректного завершения работы.
+        """
+        self.logger.info(
+            f"Stopping Bot at {datetime.now(UTC).strftime('%d/%m/%Y, %H:%M')}"
+        )
+        self.logger.info(f"Uptime: {self.cycles * self.cycle_wait}")
+        self.cycle_run = False
+        return super().stop(block=block)
 
     @staticmethod
     def run_check(obj: Reminder):
@@ -95,7 +108,7 @@ class Bot(Client):
                     except Exception as e:
                         raise e
 
-                await sleep(2)
+                await sleep(self.cycle_wait)
 
     def collect_methods(self):
         """
