@@ -5,7 +5,7 @@ import logging
 import re
 from asyncio import BaseEventLoop, sleep
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from typing import Any, Callable, Coroutine, Optional, Union
 
 from pyrogram import filters
@@ -42,7 +42,7 @@ class Bot(Client):
         self.cycle_run: bool = True
         self.cycle_wait: int = 2
         self.cycles: int = 0
-        self.start_time: datetime = datetime.now(UTC)
+        self.start_time: datetime = datetime.now(timezone(timedelta(hours=3)))
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
         self.logger = logging.getLogger("bot")
@@ -51,7 +51,7 @@ class Bot(Client):
 
     def start(self):
         self.logger.info(
-            f"Starting Bot at {datetime.now(UTC).strftime("%d/%m/%Y, %H:%M")}"
+            f"Starting Bot at {datetime.now(timezone(timedelta(hours=3))).strftime("%d/%m/%Y, %H:%M")}"
         )
 
         return super().start()
@@ -61,9 +61,11 @@ class Bot(Client):
         Останавливает бота, передавая параметр block для корректного завершения работы.
         """
         self.logger.info(
-            f"Stopping Bot at {datetime.now(UTC).strftime('%d/%m/%Y, %H:%M')}"
+            f"Stopping Bot at {datetime.now(timezone(timedelta(hours=3))).strftime('%d/%m/%Y, %H:%M')}"
         )
-        self.logger.info(f"Uptime: {datetime.now(UTC) - self.start_time}")
+        self.logger.info(
+            f"Uptime: {datetime.now(timezone(timedelta(hours=3))) - self.start_time}"
+        )
         self.cycle_run = False
         return super().stop(block=block)
 
@@ -227,7 +229,7 @@ class Bot(Client):
         """
         time_arguments = [message.command[1].strip()]
         reminder_text = " ".join(message.command[2:])
-        current_time = datetime.now(UTC)
+        current_time = datetime.now(timezone(timedelta(hours=3)))
 
         time_units = {
             "s": 1,

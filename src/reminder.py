@@ -1,7 +1,8 @@
 """Модуль напоминателя"""
 
-from datetime import datetime, UTC
+from datetime import datetime, timedelta, timezone
 from typing import Optional
+
 from pyrogram.types import User
 
 
@@ -48,5 +49,6 @@ class Reminder:
 
     def check(self) -> tuple[bool, int]:
         """Проверяет, прошла ли дата напоминания, и возвращает кортеж (is_expired, id)."""
-        now = datetime.now(UTC) if self.date.tzinfo else datetime.now(UTC)
+        
+        now = datetime.now(timezone(timedelta(hours=3)))
         return self.date < now, self.id

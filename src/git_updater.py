@@ -1,5 +1,5 @@
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import logging
 
 
@@ -12,7 +12,6 @@ class GitUpdater:
 
     def get_last_git_update(self) -> datetime | None:
         try:
-
             result = subprocess.run(
                 [
                     "git",
@@ -26,7 +25,11 @@ class GitUpdater:
                 check=True,
             )
             last_update = result.stdout.strip()
-            return datetime.strptime(last_update, f"'{self.date_format}'")
+            # Convert to Moscow time (UTC+3)
+            utc_time = datetime.strptime(
+                last_update, f"'{self.date_format}'"
+            ).astimezone(timezone(timedelta(hours=3)))
+            return utc_time
         except subprocess.CalledProcessError as e:
             self.logger.warning(f"Error while checking last Git update: {e}")
             return None
