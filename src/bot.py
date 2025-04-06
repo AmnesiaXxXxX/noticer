@@ -15,6 +15,8 @@ from pyrogram.types import Message
 
 from src.reminder import Reminder
 
+logging.basicConfig()
+
 
 class Bot(Client):
     """Класс бота"""
@@ -42,6 +44,7 @@ class Bot(Client):
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
         self.logger = logging.getLogger("pyrogram")
+
         self.load_handlers()
 
     def start(self):
