@@ -39,6 +39,7 @@ class GitUpdater:
             self.logger.warning(f"Error while checking last Git update: {e}")
             return None
 
+
     @property
     def is_latest_version(self) -> bool:
         try:
