@@ -6,7 +6,7 @@ authors = [
     {name = "amnesiawho",email = "92972232+AmnesiaXxXxX@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12,<4.0"
+requires-python = ">=3.11,<4.0"
 dependencies = [
     "pyrofork (>=2.3.61,<3.0.0)",
     "tgcrypto (>=1.2.5,<2.0.0)",
