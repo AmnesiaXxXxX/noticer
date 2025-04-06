@@ -17,6 +17,7 @@ from reminder import Reminder
 
 class Bot(Client):
     """Класс бота"""
+
     def __init__(
         self, name: str, api_id: Union[int, str], api_hash: str, bot_token: str
     ):
@@ -145,10 +146,13 @@ class Bot(Client):
             main_loop (Optional[BaseEventLoop]): Основной асинхронный цикл.
                 Если указан, используется переданный цикл, иначе используется цикл клиента.
         """
-        if main_loop:
-            self.loop = main_loop
-        self.loop.create_task(self.update_cycle())
-        self.run()
+        try:
+            if main_loop:
+                self.loop = main_loop
+            self.loop.create_task(self.update_cycle())
+            self.run()
+        except KeyboardInterrupt:
+            self.cycle_run = False
 
     async def handle_help_start(self, _, message: Message):
         """
