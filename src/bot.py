@@ -195,22 +195,22 @@ class Bot(Client):
         if args:
             text = "Команды бота: \n\n\n"
             for name, func in self.async_methods.items():
+                attrs = name.split("_")[1:]
                 if func.__doc__:
                     doc = func.__doc__.splitlines()[1].strip()
                 else:
                     doc = "Без описания"
-                text += f"`/{name}`: **{doc}**\n\n"
-                
+                text += f"{', '.join(f'/{name}' for name in attrs)}: **{doc}**\n\n"
+
         else:
             for arg in args:
                 if arg in [name for name, _ in self.async_methods.items()]:
                     doc = self.async_methods.get(arg, "Без описания").__doc__
                     text = f"Команда {arg}: {doc}"
                 else:
-                    text = "Такой команды нет("        
-                
-        await message.reply(text)          
-        
+                    text = "Такой команды нет("
+
+        await message.reply(text)
 
     async def handle_remind(self, _, message: Message):
         """
