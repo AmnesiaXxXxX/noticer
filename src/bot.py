@@ -27,7 +27,7 @@ class Bot(Client):
         self.cycle_run: bool = True
         self.cycles: int = 0
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
-        super().__init__(name, api_id, api_hash, bot_token)
+        super().__init__(name, api_id, api_hash, bot_token=bot_token)
 
         self.load_handlers()
 
