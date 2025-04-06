@@ -192,7 +192,7 @@ class Bot(Client):
         """
         args = message.command[1:]
         text = "502"
-        if args:
+        if not args:
             text = "Команды бота: \n\n\n"
             for name, func in self.async_methods.items():
                 attrs = name.split("_")[1:]
