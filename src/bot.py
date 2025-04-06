@@ -10,7 +10,7 @@ from typing import Any, Callable, Coroutine, Optional, Union
 from pyrogram import filters
 from pyrogram.client import Client
 from pyrogram.handlers.message_handler import MessageHandler
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import Message
 
 from reminder import Reminder
 
@@ -96,6 +96,7 @@ class Bot(Client):
 
             except AttributeError:
                 continue
+        return self.async_methods
 
     def load_handlers(self):
         self.collect_methods()
@@ -110,8 +111,10 @@ class Bot(Client):
         self.run()
 
     async def handle_help_start(self, _, message: Message):
-
-        q = await message.from_user.ask("Ты здесь?")
+        q = await message.ask(
+            "Ты здесь?",
+        )
+        await message.reply(f"```HTML\n{message.text.html}```")
         if q.text.lower() == "да":
             await message.reply("HEEELp")
         else:
