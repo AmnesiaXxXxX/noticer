@@ -1,3 +1,5 @@
+"""Модуль напоминателя"""
+
 from datetime import datetime, UTC
 from typing import Optional
 from pyrogram.types import User
@@ -31,7 +33,10 @@ class Reminder:
     """
 
     def __init__(
-        self, user: User, text: str = "Стандартное уведомление", date: Optional[datetime] = None
+        self,
+        user: User,
+        text: str = "Стандартное уведомление",
+        date: Optional[datetime] = None,
     ) -> None:
         self.text: str = text
         if date is None:
