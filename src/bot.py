@@ -15,10 +15,6 @@ from pyrogram.types import Message
 from reminder import Reminder
 
 
-def run_check(obj: Reminder):
-    return obj.check()
-
-
 class Bot(Client):
     """Класс бота"""
     def __init__(
@@ -46,6 +42,11 @@ class Bot(Client):
 
         self.load_handlers()
 
+    @staticmethod
+    def run_check(obj: Reminder):
+        """Функция для проверки напоминателя"""
+        return obj.check()
+
     async def update_cycle(self):
         """
         Запускает асинхронный цикл проверки напоминаний.
@@ -61,7 +62,7 @@ class Bot(Client):
             while self.cycle_run:
                 self.cycles += 1
                 future_to_object = {
-                    executor.submit(run_check, obj): obj
+                    executor.submit(self.run_check, obj): obj
                     for obj in self.reminders
                     if obj.is_active
                 }
