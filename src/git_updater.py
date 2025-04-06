@@ -4,6 +4,7 @@ import subprocess
 from datetime import datetime, timedelta, timezone
 import time
 
+
 class GitUpdater:
     def __init__(self) -> None:
         self.date_format: str = "%d/%m/%Y %H:%M:%S"
@@ -11,8 +12,6 @@ class GitUpdater:
         self.logger = logging.getLogger("gitupdater")
         self.logger.level = logging.INFO
         self.logger.info(f"Last Git Update: {self.get_last_git_update()}")
-        self.is_generator_enabled: bool = True
-        self.loop: asyncio.AbstractEventLoop | None = None
 
     def get_last_git_update(self) -> datetime | None:
         try:
@@ -70,6 +69,50 @@ class GitUpdater:
             self.logger.info("Repository successfully updated to the latest version.")
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Error while updating the repository: {e}")
+
+    async def generator_enter(self):
+        self.logger.info(self.is_generator_enabled)
+
+        while self.is_generator_enabled:
+            if not self.is_latest_version:
+                self.update()
+                self.restart_application()
+            self.logger.info(self.get_last_git_update())
+            await asyncio.sleep(20)
+
+    def restart_application(self):
+        try:
+            self.logger.info("Restarting application...")
+            subprocess.run(["poetry", "run", "run"], check=True)
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Error while restarting the application: {e}")
+
+    def __enter__(self):
+        self.logger.info("Entering context manager.")
+        if not self.loop:
+            self.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.loop)
+            self.loop.create_task(self.generator_enter())
+            self.loop.run_in_executor(None, self.loop.run_forever)
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: object | None,
+    ) -> None:
+        self.logger.info("Exiting context manager.")
+        self.is_generator_enabled = False
+        if self.loop and self.loop.is_running():  # type: ignore[union-attr]
+            self.loop.call_soon_threadsafe(self.loop.stop)
+
+
+updater = GitUpdater()
+if __name__ == "__main__":
+    with updater:
+        while True:
+            time.sleep(1)
 
     async def generator_enter(self):
         self.logger.info(self.is_generator_enabled)
