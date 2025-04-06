@@ -12,7 +12,7 @@ class GitUpdater:
 
     def get_last_git_update(self) -> datetime | None:
         try:
-            # Get the date of the last commit
+
             result = subprocess.run(
                 [
                     "git",

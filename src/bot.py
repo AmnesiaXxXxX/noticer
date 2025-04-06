@@ -14,6 +14,7 @@ from pyrogram.handlers.message_handler import MessageHandler
 from pyrogram.types import Message
 
 from src.reminder import Reminder
+
 logging.basicConfig()
 
 
@@ -42,10 +43,9 @@ class Bot(Client):
         self.cycle_wait: int = 2
         self.cycles: int = 0
         self.start_time: datetime = datetime.now(UTC)
-        self.start_time: datetime = datetime.now(UTC)
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
-        self.logger = logging.getLogger("pyrogram")
+        self.logger = logging.getLogger("bot")
         self.logger.level = logging.INFO
         self.load_handlers()
 
@@ -92,7 +92,6 @@ class Bot(Client):
                     if obj.is_active
                 }
 
-                # Собираем результаты по мере их готовности
                 for future in future_to_object:
                     try:
                         result = future.result()
@@ -123,22 +122,22 @@ class Bot(Client):
             dict[str, Callable[..., Coroutine[Any, Any, Any]]]: Словарь асинхронных методов,
             где ключом является имя метода.
         """
-        # Получаем все атрибуты класса
+
         class_attrs = dir(self)
 
         for attr_name in class_attrs:
             if hasattr(super(), attr_name):
                 continue
-            # Пропускаем специальные методы и атрибуты
+
             if attr_name.startswith("_"):
                 continue
-            # Если метод не начинается с "handle", пропускаем его
+
             if not attr_name.startswith("handle"):
                 continue
 
             try:
                 attr = getattr(self, attr_name)
-                # Проверяем, является ли атрибут функцией или методом
+
                 if inspect.ismethod(attr) or inspect.isfunction(attr):
                     if inspect.iscoroutinefunction(attr):
                         self.async_methods[attr_name] = attr
@@ -194,7 +193,9 @@ class Bot(Client):
                     doc = func.__doc__.splitlines()[1].strip()
                 else:
                     doc = "Без описания"
-                text += f"  - {', '.join(f'/{attr}' for attr in attrs)}:\n      {doc}\n\n"
+                text += (
+                    f"  - {', '.join(f'/{attr}' for attr in attrs)}:\n      {doc}\n\n"
+                )
 
         else:
             for arg in args:
@@ -222,32 +223,30 @@ class Bot(Client):
             `/remind time text`
 
         Пример:
-            `/remind 10m Запомнить что нибудь`
+            `/remind 10m Запомнить что-нибудь`
         """
         time_arguments = [message.command[1].strip()]
         reminder_text = " ".join(message.command[2:])
         current_time = datetime.now(UTC)
 
-        # Словарь для преобразования сокращений в секунды
         time_units = {
-            "s": 1,  # секунды
-            "m": 60,  # минуты
-            "h": 3600,  # часы
-            "d": 86400,  # дни
-            "M": 2628000,  # месяцы (примерно 30 дней)
+            "s": 1,
+            "m": 60,
+            "h": 3600,
+            "d": 86400,
+            "M": 2628000,
         }
 
         total_seconds = 0
 
         for arg in time_arguments:
-            # Ищем все совпадения вида "число+буква" в аргументе
+
             matches = re.findall(r"(\d+)(\w)", arg)
             if matches:
                 for match in matches:
                     number, unit = match
                     number = int(number)
 
-                    # Проверяем, что единица времени допустима
                     if unit in time_units:
                         total_seconds += number * time_units[unit]
                     else:
@@ -260,11 +259,9 @@ class Bot(Client):
             )
             return
 
-        # Вычисляем время напоминания
         reminder_time = current_time + timedelta(seconds=total_seconds)
         self.reminders.append(Reminder(message.from_user, reminder_text, reminder_time))
 
-        # Форматируем время для пользователя
         formatted_time = reminder_time.strftime("%Y-%m-%d %H:%M:%S UTC")
 
         await message.reply(f"Напоминание установлено на {formatted_time}")
