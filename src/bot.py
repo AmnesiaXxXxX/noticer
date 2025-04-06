@@ -14,6 +14,7 @@ from pyrogram.types import Message
 
 from src.reminder import Reminder
 import logging
+import logging
 
 
 class Bot(Client):
@@ -42,11 +43,15 @@ class Bot(Client):
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
         self.logger = logging.getLogger("pyrogram")
+        self.logger = logging.getLogger("pyrogram")
         self.load_handlers()
 
     def start(self):
-        self.logger.info(f"Starting {self.__qualname__}")
+        self.logger.info(
+            f"Starting Bot at {datetime.now(UTC).strftime("%d/%m/%Y, %H:%M")}"
+        )
         return super().start()
+
     @staticmethod
     def run_check(obj: Reminder):
         """Функция для проверки напоминателя"""
@@ -161,20 +166,13 @@ class Bot(Client):
     async def handle_help_start(self, _, message: Message):
         """
         Обрабатывает запрос помощи, формируя список доступных команд бота и их описаний.
-<<<<<<< HEAD
-=======
 
-        Проходит по словарю self.async_methods, где каждый элемент представляет команду и
-        ее описание (из docstring соответствующего метода). После формирования текста с
-        перечнем команд, отправляет его в ответ на запрос пользователя.
->>>>>>> f587115 (refactor: Удалить неиспользуемый код и обновить обработчик команды помощи)
+                Проходит по словарю self.async_methods, где каждый элемент представляет команду и
+                ее описание (из docstring соответствующего метода). После формирования текста с
+                перечнем команд, отправляет его в ответ на запрос пользователя.
 
-        Проходит по словарю self.async_methods, где каждый элемент представляет команду и
-        ее описание (из docstring соответствующего метода). После формирования текста с
-        перечнем команд, отправляет его в ответ на запрос пользователя.
-        
-        Args:
-            message (Message): Объект сообщения, содержащий данные о запросе пользователя.
+                Args:
+                    message (Message): Объект сообщения, содержащий данные о запросе пользователя.
         """
         text = "Команды бота \n\n\n"
         for name, func in self.async_methods.items():
