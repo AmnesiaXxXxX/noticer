@@ -12,7 +12,7 @@ from pyrogram.client import Client
 from pyrogram.handlers.message_handler import MessageHandler
 from pyrogram.types import Message
 
-from reminder import Reminder
+from src.reminder import Reminder
 
 
 class Bot(Client):
@@ -40,7 +40,7 @@ class Bot(Client):
         self.cycles: int = 0
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
-
+        
         self.load_handlers()
 
     @staticmethod
