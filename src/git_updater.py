@@ -8,7 +8,7 @@ import time
 class GitUpdater:
     def __init__(self) -> None:
         self.date_format: str = "%d/%m/%Y %H:%M:%S"
-        logging.basicConfig()
+        
         self.logger = logging.getLogger("gitupdater")
         self.logger.level = logging.INFO
         self.logger.info(f"Last Git Update: {self.get_last_git_update()}")
