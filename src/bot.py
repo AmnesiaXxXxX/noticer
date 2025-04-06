@@ -43,6 +43,7 @@ class Bot(Client):
         self.cycle_wait: int = 2
         self.cycles: int = 0
         self.start_time: datetime = datetime.now(UTC)
+        self.start_time: datetime = datetime.now(UTC)
         self.async_methods: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
         super().__init__(name, api_id, api_hash, bot_token=bot_token)
         self.logger = logging.getLogger("pyrogram")
@@ -63,7 +64,7 @@ class Bot(Client):
         self.logger.info(
             f"Stopping Bot at {datetime.now(UTC).strftime('%d/%m/%Y, %H:%M')}"
         )
-        self.logger.info(f"Uptime: {self.start_time - datetime.now(UTC)}")
+        self.logger.info(f"Uptime: {datetime.now(UTC) - self.start_time}")
         self.cycle_run = False
         return super().stop(block=block)
 
